@@ -16,7 +16,7 @@ namespace IPCamService
 
         static void Main(string[] args)
         {
-            GrabbersHandler grabbers = new GrabbersHandler();
+            GrabbersHandler handler = new GrabbersHandler();
             /*
             string url = "http://169.254.2.93/video.mjpg";
             IVideoGrabber grabber1 = new Vivotek_HTTP_MJPG_GRABBER();
@@ -33,19 +33,32 @@ namespace IPCamService
             ConfigService.SaveGrabbersConfig(grabbers.GetAll());
             */
 
-            
-            List<IVideoGrabber> list =  ConfigService.LoadGrabbersFromFile();
-            grabbers.Add(list);
+
 
             //grabbers.InitAll();
 
+            Console.WriteLine("Select action:");
+            Console.WriteLine("1 - Add Camera");
+            Console.WriteLine("2 - Show Cameras");
+            var action = Console.ReadLine();
+            if (action == "1")
+            {
+                Console.Write("URL: ");
+                var url = Console.ReadLine();
+                IVideoGrabber videoGrabber = new Vivotek_HTTP_MJPG_GRABBER();
+                videoGrabber.SetUrl(url);
+                handler.Add(videoGrabber);
+            }
+
+
+            List<IVideoGrabber> videoGrabbers = handler.GetAll();
+            handler.InitAll();
             while (true)
             {
-                List<IVideoGrabber> videoGrabbers = grabbers.GetAll();
                 foreach (var grabber in videoGrabbers)
                 {
-                    //Console.WriteLine(grabber.GetName());
-                    Mat frame = new Mat();
+
+
                     CvInvoke.Imshow(grabber.GetUrl(), grabber.GetFrame()); ;
                 }
                 CvInvoke.WaitKey(10);

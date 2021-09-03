@@ -10,7 +10,7 @@ namespace Core
     public abstract class IVideoGrabber
     {
  
-        public abstract void Create(string URL);
+        public abstract void SetUrl(string URL);
         public abstract Mat GetFrame();
         public abstract string GetUrl();
         public abstract Guid GetId();
@@ -35,12 +35,9 @@ namespace Core
         }
 
 
-        public override void Create(string URL)
+        public override void SetUrl(string URL)
         {
-
             this.url = URL;
-            this.capture = new VideoCapture(url);
-            this.frame = new Mat();
         }
 
         public override void Init()

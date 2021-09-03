@@ -21,11 +21,14 @@ namespace Core
         }
         public void Add(List<IVideoGrabber> grabbers)
         {
+            videoGrabbers.Clear();
+            videoGrabbers = ConfigService.LoadGrabbersFromFile();
             foreach (var item in grabbers)
             {
-                item.Create(item.GetUrl());
+                item.SetUrl(item.GetUrl());
                 videoGrabbers.Add(item);
             }
+            ConfigService.SaveGrabbersToFile(videoGrabbers);
         }
         public List<IVideoGrabber> GetAll()
         {
@@ -34,15 +37,20 @@ namespace Core
             return videoGrabbers;
         }
 
-        public IVideoGrabber GetByID(int id)
+        public IVideoGrabber GetByID(Guid id)
         {
-            return videoGrabbers.ElementAt(id);
+            var item2del = videoGrabbers.Find(x => x.id.Equals(id));
+            return item2del;
         }
 
-        public void RemoveByID(Guid id)
+        public bool RemoveByID(Guid id)
         {
-
-            //videoGrabbers.RemoveAt(id);
+            var item2del = videoGrabbers.Find(x => x.id.Equals(id));
+            bool status = videoGrabbers.Remove(item2del);
+            ConfigService.SaveGrabbersToFile(videoGrabbers);
+            Console.WriteLine("Removed: " + status);
+            Console.WriteLine("Video grabbers count: " + videoGrabbers.Count);
+            return status;
         }
 
         public bool RemoveByItem(IVideoGrabber item)
@@ -56,9 +64,9 @@ namespace Core
 
             var item2del = videoGrabbers.Find(x => x.id.Equals(item.id));
             bool status = videoGrabbers.Remove(item2del);
+            ConfigService.SaveGrabbersToFile(videoGrabbers);
             Console.WriteLine("Removed: " + status);
             Console.WriteLine("Video grabbers count: " + videoGrabbers.Count);
-            ConfigService.SaveGrabbersToFile(videoGrabbers);
             return status;
             
         }
