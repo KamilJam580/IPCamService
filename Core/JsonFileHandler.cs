@@ -16,10 +16,14 @@ namespace Core
     {
 
         static string GrabberConfigPath = "GrabbersConfig.json";
-
+        private static readonly object fileLock = new object();
         public static List<ICamera> LoadGrabbersFromFile()
         {
-            string readText = File.ReadAllText(GrabberConfigPath);
+            string readText;
+            lock (fileLock)
+            {
+                readText = File.ReadAllText(GrabberConfigPath);
+            }
             try
             {
                 var deserialized = JsonConvert.DeserializeObject(readText);
@@ -40,6 +44,8 @@ namespace Core
                 return new List<ICamera>();
             }
 
+
+
         }
 
         private static ICamera CameraFactory(JObject jobject, string type)
@@ -55,10 +61,14 @@ namespace Core
         public static void SaveGrabbersToFile(List<ICamera> grabbers)
         {
             var jsonString = JsonConvert.SerializeObject(grabbers, Formatting.Indented);
-            using (StreamWriter writer = new StreamWriter(GrabberConfigPath))
+            lock (fileLock)
             {
-                writer.WriteLine(jsonString);
+                using (StreamWriter writer = new StreamWriter(GrabberConfigPath))
+                {
+                    writer.WriteLine(jsonString);
+                }
             }
+
         }
 
 
