@@ -73,9 +73,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ConfigService.cs" />
-    <Compile Include="Grabber.cs" />
-    <Compile Include="GrabbersHandler.cs" />
+    <Compile Include="JsonFileHandler.cs" />
+    <Compile Include="Camera.cs" />
+    <Compile Include="StorageService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

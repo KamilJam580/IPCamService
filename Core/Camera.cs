@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Core
 {
-    public abstract class IVideoGrabber
+    public abstract class ICamera
     {
  
         public abstract void SetUrl(string URL);
@@ -22,10 +22,10 @@ namespace Core
 
     }
 
-    public class Vivotek_HTTP_MJPG_GRABBER : IVideoGrabber
+    public class Vivotek_HTTP_MJPG_GRABBER : ICamera
     {
 
-        public string type = GrabberType.Vivotek_HTTP_MJPG_GRABBER;
+        public string type = CameraType.Vivotek_HTTP_MJPG_GRABBER;
         VideoCapture capture;
         Mat frame;
 

@@ -7,56 +7,53 @@ using System.Threading.Tasks;
 
 namespace Core
 {
-    public class GrabbersHandler
+    public static class StorageService
     {
-        //List<IVideoGrabber> list = ConfigService.LoadGrabbersConfig();
-        List<IVideoGrabber> videoGrabbers = new List<IVideoGrabber>();
 
-        public void Add(IVideoGrabber grabber)
+
+        public static void Add(ICamera grabber)
         {
-            videoGrabbers.Clear();
-            videoGrabbers = ConfigService.LoadGrabbersFromFile();
+            List<ICamera> videoGrabbers = JsonFileHander.LoadGrabbersFromFile();
             videoGrabbers.Add(grabber);
-            ConfigService.SaveGrabbersToFile(videoGrabbers);
+            JsonFileHander.SaveGrabbersToFile(videoGrabbers);
         }
-        public void Add(List<IVideoGrabber> grabbers)
+        public static void Add(List<ICamera> grabbers)
         {
-            videoGrabbers.Clear();
-            videoGrabbers = ConfigService.LoadGrabbersFromFile();
+            List<ICamera> videoGrabbers = JsonFileHander.LoadGrabbersFromFile();
             foreach (var item in grabbers)
             {
                 item.SetUrl(item.GetUrl());
                 videoGrabbers.Add(item);
             }
-            ConfigService.SaveGrabbersToFile(videoGrabbers);
+            JsonFileHander.SaveGrabbersToFile(videoGrabbers);
         }
-        public List<IVideoGrabber> GetAll()
+        public static List<ICamera> GetAll()
         {
-            videoGrabbers.Clear();
-            videoGrabbers = ConfigService.LoadGrabbersFromFile();
+            List<ICamera> videoGrabbers = JsonFileHander.LoadGrabbersFromFile();
             return videoGrabbers;
         }
 
-        public IVideoGrabber GetByID(Guid id)
+        public static ICamera GetByID(Guid id)
         {
+            List<ICamera> videoGrabbers = JsonFileHander.LoadGrabbersFromFile();
             var item2del = videoGrabbers.Find(x => x.id.Equals(id));
             return item2del;
         }
 
-        public bool RemoveByID(Guid id)
+        public static bool RemoveByID(Guid id)
         {
+            List<ICamera> videoGrabbers = JsonFileHander.LoadGrabbersFromFile();
             var item2del = videoGrabbers.Find(x => x.id.Equals(id));
             bool status = videoGrabbers.Remove(item2del);
-            ConfigService.SaveGrabbersToFile(videoGrabbers);
+            JsonFileHander.SaveGrabbersToFile(videoGrabbers);
             Console.WriteLine("Removed: " + status);
             Console.WriteLine("Video grabbers count: " + videoGrabbers.Count);
             return status;
         }
 
-        public bool RemoveByItem(IVideoGrabber item)
+        public static bool RemoveByItem(ICamera item)
         {
-            videoGrabbers.Clear();
-            videoGrabbers = ConfigService.LoadGrabbersFromFile();
+            List<ICamera> videoGrabbers = JsonFileHander.LoadGrabbersFromFile();
 
             Guid guid = item.id;
             Console.WriteLine("GUID TO DELETE: " + guid.ToString());
@@ -64,7 +61,7 @@ namespace Core
 
             var item2del = videoGrabbers.Find(x => x.id.Equals(item.id));
             bool status = videoGrabbers.Remove(item2del);
-            ConfigService.SaveGrabbersToFile(videoGrabbers);
+            JsonFileHander.SaveGrabbersToFile(videoGrabbers);
             Console.WriteLine("Removed: " + status);
             Console.WriteLine("Video grabbers count: " + videoGrabbers.Count);
             return status;
@@ -74,31 +71,19 @@ namespace Core
         /// It will also remove grabbers data from file!!! 
         /// Be carefour !!!!
         /// </summary>
-        public void RemoveAll()
+        public static void RemoveAll()
         {
-            videoGrabbers.Clear();
-            ConfigService.SaveGrabbersToFile(videoGrabbers);
+            List<ICamera> videoGrabbers = new List<ICamera>();
+            JsonFileHander.SaveGrabbersToFile(videoGrabbers);
         }
 
-        public void InitAll()
-        {
-            foreach (var item in videoGrabbers)
-            {
-                item.Init();
-            }
-        }
 
-        public int GetCount()
+        public static int GetCount()
         {
-            videoGrabbers.Clear();
-            videoGrabbers = ConfigService.LoadGrabbersFromFile();
+            List<ICamera> videoGrabbers = JsonFileHander.LoadGrabbersFromFile();
             return videoGrabbers.Count;
         }
 
-        public GrabbersHandler()
-        {
-
-        }
 
     }
 }

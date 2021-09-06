@@ -10,30 +10,28 @@ namespace ConfigServiceTEST
         string url = "http://169.254.2.93/video.mjpg";
         string url2 = "http://169.254.178.49/video2.mjpg";
         string url3 = "http://169.254.20.26/video2.mjpg";
-        private void AddGrabber2(GrabbersHandler grabbersHandler)
+        private void AddGrabber2()
         {
-            IVideoGrabber grabber2 = new Vivotek_HTTP_MJPG_GRABBER();
-            grabber2.SetUrl(url);
-            grabbersHandler.Add(grabber2);
+            ICamera camera = new Vivotek_HTTP_MJPG_GRABBER();
+            camera.SetUrl(url);
+            StorageService.Add(camera);
         }
 
-        private void AddGrabber1(GrabbersHandler grabbersHandler)
+        private void AddGrabber1()
         {
-            IVideoGrabber grabber1 = new Vivotek_HTTP_MJPG_GRABBER();
-            grabber1.SetUrl(url);
-            grabbersHandler.Add(grabber1);
+            ICamera camera = new Vivotek_HTTP_MJPG_GRABBER();
+            camera.SetUrl(url);
+            StorageService.Add(camera);
         }
 
         [TestMethod]
         public void AddGrabberTest()
         {
             // Arrange
-            GrabbersHandler grabbersHandler = new GrabbersHandler();
-            grabbersHandler.RemoveAll();
-            AddGrabber1(grabbersHandler);
-
+            StorageService.RemoveAll();
+            AddGrabber1();
             // Act
-            var count = grabbersHandler.GetCount();
+            var count = StorageService.GetCount();
             // Assert
             Assert.AreNotEqual(0, count);
         }
@@ -42,13 +40,11 @@ namespace ConfigServiceTEST
         public void ReadConfigTest()
         {
             // Arrange
-            GrabbersHandler grabbersHandler = new GrabbersHandler();
-            grabbersHandler.RemoveAll();
-
-            AddGrabber1(grabbersHandler);
-            AddGrabber2(grabbersHandler);
+            StorageService.RemoveAll();
+            AddGrabber1();
+            AddGrabber2();
             // Act
-            var count = grabbersHandler.GetCount();
+            var count = StorageService.GetCount();
             // Assert
             Assert.AreEqual(2, count);
         }
@@ -57,14 +53,13 @@ namespace ConfigServiceTEST
         public void RemoveByValidItemTest()
         {
             // Arrange
-            GrabbersHandler grabbersHandler = new GrabbersHandler();
-            grabbersHandler.RemoveAll();
-            IVideoGrabber grabber = new Vivotek_HTTP_MJPG_GRABBER();
-            grabber.SetUrl(url3);
+            StorageService.RemoveAll();
+            ICamera camera = new Vivotek_HTTP_MJPG_GRABBER();
+            camera.SetUrl(url3);
             // Act
-            grabbersHandler.Add(grabber);
+            StorageService.Add(camera);
 
-            bool status = grabbersHandler.RemoveByItem(grabber);
+            bool status = StorageService.RemoveByItem(camera);
             // Assert
             Assert.AreEqual(true, status);
         }
@@ -73,17 +68,16 @@ namespace ConfigServiceTEST
         public void RemoveByInvalidItemTest()
         {
             // Arrange
-            GrabbersHandler grabbersHandler = new GrabbersHandler();
-            grabbersHandler.RemoveAll();
-            IVideoGrabber grabber = new Vivotek_HTTP_MJPG_GRABBER();
-            grabber.SetUrl(url3);
+            StorageService.RemoveAll();
+            ICamera camera = new Vivotek_HTTP_MJPG_GRABBER();
+            camera.SetUrl(url3);
 
-            IVideoGrabber grabber2 = new Vivotek_HTTP_MJPG_GRABBER();
-            grabber2.SetUrl(url);
+            ICamera camera2 = new Vivotek_HTTP_MJPG_GRABBER();
+            camera2.SetUrl(url);
             // Act
-            grabbersHandler.Add(grabber);
+            StorageService.Add(camera);
 
-            bool status = grabbersHandler.RemoveByItem(grabber2);
+            bool status = StorageService.RemoveByItem(camera2);
             // Assert
             Assert.AreEqual(false, status);
         }
@@ -92,14 +86,13 @@ namespace ConfigServiceTEST
         public void RemoveByIdTestStatus()
         {
             // Arrange
-            GrabbersHandler grabbersHandler = new GrabbersHandler();
-            grabbersHandler.RemoveAll();
-            IVideoGrabber grabber = new Vivotek_HTTP_MJPG_GRABBER();
-            grabber.SetUrl(url3);
+            StorageService.RemoveAll();
+            ICamera camera = new Vivotek_HTTP_MJPG_GRABBER();
+            camera.SetUrl(url3);
             // Act
-            grabbersHandler.Add(grabber);
+            StorageService.Add(camera);
 
-            bool status = grabbersHandler.RemoveByID(grabber.id);
+            bool status = StorageService.RemoveByID(camera.id);
             // Assert
             Assert.AreEqual(true, status);
         }
@@ -107,31 +100,29 @@ namespace ConfigServiceTEST
         public void RemoveByIdTestQuantity()
         {
             // Arrange
-            GrabbersHandler grabbersHandler = new GrabbersHandler();
-            grabbersHandler.RemoveAll();
-            IVideoGrabber grabber = new Vivotek_HTTP_MJPG_GRABBER();
-            grabber.SetUrl(url3);
+            StorageService.RemoveAll();
+            ICamera camera = new Vivotek_HTTP_MJPG_GRABBER();
+            camera.SetUrl(url3);
             // Act
-            grabbersHandler.Add(grabber);
+            StorageService.Add(camera);
 
-            bool status = grabbersHandler.RemoveByID(grabber.id);
+            bool status = StorageService.RemoveByID(camera.id);
             // Assert
-            Assert.AreEqual(0, grabbersHandler.GetCount());
+            Assert.AreEqual(0, StorageService.GetCount());
         }
 
         [TestMethod]
         public void RemoveAllTest()
         {
             // Arrange
-            GrabbersHandler grabbersHandler = new GrabbersHandler();
-            IVideoGrabber grabber = new Vivotek_HTTP_MJPG_GRABBER();
-            grabber.SetUrl(url3);
+            ICamera camera = new Vivotek_HTTP_MJPG_GRABBER();
+            camera.SetUrl(url3);
             // Act
-            grabbersHandler.Add(grabber);
+            StorageService.Add(camera);
 
-            grabbersHandler.RemoveAll();
+            StorageService.RemoveAll();
             // Assert
-            Assert.AreEqual(0, grabbersHandler.GetCount());
+            Assert.AreEqual(0, StorageService.GetCount());
         }
 
 
